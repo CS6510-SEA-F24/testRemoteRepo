@@ -1,5 +1,4 @@
-#global:
-#  registry: <your-registry-url>
+name: CI Pipeline # Added this line
 
 on:
   push:
