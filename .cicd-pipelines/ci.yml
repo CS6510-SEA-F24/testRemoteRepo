@@ -17,39 +17,41 @@ jobs:
       - "echo 'Setting up Python environment'"
       - "python -m pip install --upgrade pip"
       - "pip install -r requirements.txt"
-      - "export PYTHONPATH=."  # Changed from GitHub Actions syntax to standard shell export
-      - "mkdir -p test-results"
+      - "mkdir -p ./test-results"       # Ensure test results directory exists
+      - "mkdir -p ./setup/logs"         # Ensure setup logs directory exists
     artifacts:
       destination:
-        path: "/setup/logs"
+        path: "./setup/logs"
       upload:
         path:
-          - "setup/*.log"
+          - "./setup/*.log"
 
   run_tests:
     stage: test
     commands:
       - "echo 'Running pytest with verbose output...'"
-      - "PYTHONPATH=$PWD pytest -v -p no:warnings --tb=line --junitxml=test-results/results.xml remote_repo/test_main.py"  # Added PYTHONPATH directly to the command
+      - "mkdir -p ./test-results"       # Ensure test results directory exists
+      - "PYTHONPATH=. pytest test_main.py -v --tb=line --junitxml=./test-results/results.xml"
     needs: [setup_environment]
     artifacts:
       destination:
-        path: "/test-results"
+        path: "./test-results"
       upload:
         path:
-          - "test-results/results.xml"
+          - "./test-results/results.xml"
 
   generate_report:
     stage: report
     commands:
       - "echo 'Generating test report'"
-      - "cat test-results/results.xml || echo 'No test results found'"
+      - "mkdir -p ./reports"            # Ensure reports directory exists
+      - "cat ./test-results/results.xml || echo 'No test results found'"
     needs: [run_tests]
     artifacts:
       destination:
-        path: "/reports"
+        path: "./reports"
       upload:
         path:
-          - "test-results/*.xml"
-          - "reports/**/*"
+          - "./test-results/*.xml"
+          - "./reports/**/*"
     allow_failure: true
