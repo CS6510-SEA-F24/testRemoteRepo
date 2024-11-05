@@ -17,7 +17,7 @@ jobs:
       - "echo 'Setting up Python environment'"
       - "python -m pip install --upgrade pip"
       - "pip install -r requirements.txt"
-      - "echo 'PYTHONPATH=.' >> $GITHUB_ENV"
+      - "export PYTHONPATH=."  # Changed from GitHub Actions syntax to standard shell export
       - "mkdir -p test-results"
     artifacts:
       destination:
@@ -30,7 +30,7 @@ jobs:
     stage: test
     commands:
       - "echo 'Running pytest with verbose output...'"
-      - "pytest -v --tb=line --junitxml=test-results/results.xml"
+      - "PYTHONPATH=. pytest -v --tb=line --junitxml=test-results/results.xml"  # Added PYTHONPATH directly to the command
     needs: [setup_environment]
     artifacts:
       destination:
