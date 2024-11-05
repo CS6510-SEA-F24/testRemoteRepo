@@ -1,4 +1,5 @@
-name: CI Pipeline
+#global:
+#  registry: <your-registry-url>
 
 on:
   push:
@@ -11,19 +12,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.9.20'  # specify exact version if needed
-
+          python-version: '3.9.20'
       - name: Set PYTHONPATH
-        run: echo "PYTHONPATH=." >> $GITHUB_ENV  # adds root directory to Python path
-
+        run: echo "PYTHONPATH=." >> $GITHUB_ENV
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
       - name: Run tests
-        run: pytest -v
+        run: |
+          echo "Running pytest with verbose output..."
+          pytest -v --tb=line --junitxml=test-results/results.xml
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: pytest-results
+          path: test-results/results.xml
+          if-no-files-found: ignore
