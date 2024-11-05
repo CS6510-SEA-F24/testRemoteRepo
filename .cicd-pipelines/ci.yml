@@ -30,7 +30,7 @@ jobs:
     stage: test
     commands:
       - "echo 'Running pytest with verbose output...'"
-      - "PYTHONPATH=. pytest -v --tb=line --junitxml=test-results/results.xml"  # Added PYTHONPATH directly to the command
+      - "PYTHONPATH=$PWD pytest -v -p no:warnings --tb=line --junitxml=test-results/results.xml remote_repo/test_main.py"  # Added PYTHONPATH directly to the command
     needs: [setup_environment]
     artifacts:
       destination:
