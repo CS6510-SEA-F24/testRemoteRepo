@@ -31,7 +31,7 @@ jobs:
     commands:
       - "echo 'Running pytest with verbose output...'"
       - "mkdir -p ./test-results"       # Ensure test results directory exists
-      - "PYTHONPATH=. pytest ./tmp/remote_repo/.cicd-pipelines/test_main.py -v --tb=line --junitxml=./test-results/results.xml"
+      - "PYTHONPATH=. pytest ./tmp/remote_repo/test_main.py -v --tb=line --junitxml=./test-results/results.xml"
     needs: [setup_environment]
     artifacts:
       destination:
