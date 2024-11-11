@@ -31,7 +31,7 @@ jobs:
     commands:
       - "echo 'Running pytest with verbose output...'"
       - "mkdir -p ./test-results"       # Ensure test results directory exists
-      - "PYTHONPATH=. pytest ./tmp/remote_repo/test_main.py -v --tb=line --junitxml=./test-results/results.xml"
+      - "pytest ./test_main.py -v --tb=line --junitxml=./test-results/results.xml > ./test-results/test_output.log 2>&1"
     needs: [setup_environment]
     artifacts:
       destination:
@@ -49,9 +49,9 @@ jobs:
     needs: [run_tests]
     artifacts:
       destination:
-        path: "./reports"
-      upload:
-        path:
-          - "./test-results/*.xml"
-          - "./reports/**/*"
+        path: "./test-results"
+    upload:
+      path:
+        - "./test-results/results.xml"
+        - "./test-results/test_output.log"
     allow_failure: true
